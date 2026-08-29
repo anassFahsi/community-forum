@@ -7,8 +7,8 @@
 </head>
 <body>
     <h1 class="page-title">Registerera konto</h1>
-    
-    <form action="register-users.php" method="POST" class="form">
+
+    <form action="register_user.php" method="POST" class="form">
         <div class="form-group">
             <lable for="first_name" class="form-label">Förnamn</lable>
             <input type="text" id="first_name" name="first_name" class="form-input"    required>
