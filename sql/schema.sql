@@ -23,7 +23,7 @@ CREATE TABLE group_members (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     group_id INT NOT NULL,
-    role ENUM ('member','admin') DEFAULT member,
+    role ENUM ('member','admin') DEFAULT 'member',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (group_id) REFERENCES groups (id)
