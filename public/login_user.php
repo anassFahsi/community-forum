@@ -1,5 +1,5 @@
 <?php
-require __DIR__.'/../includes/db.php';
+require_once __DIR__.'/../includes/db.php';
 
 session_start();
 
@@ -41,5 +41,5 @@ if (!password_verify($password, $user['password_hash'])) {
 $_SESSION['user_id']=$user['id'];
 $_SESSION['first_name']=$user['first_name'];
 
-header('location:dashbord.php');
+header('location:dashboard.php');
 exit;
