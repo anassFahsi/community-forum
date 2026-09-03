@@ -165,6 +165,11 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </ul>
     <?php endif; ?>
 
+    <a href="create_invite.php?group_id=<?php echo $group_id; ?>" class="btn  btn-primary">
+     Skapa inbjudningslänk
+   </a>
+
+
 </div>
 
 </body>
