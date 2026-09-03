@@ -51,14 +51,9 @@ $stmt->execute([$group_id]);
 $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($group['name']); ?></title>
-</head>
-<body>
 
+
+<?php require_once __DIR__ .'/../includes/header.php' ?>
 <div class="group-page">
 
     <h1 class="page-title"><?php echo htmlspecialchars($group['name']); ?></h1>
@@ -106,6 +101,5 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a href="groups.php" class="btn btn-secondary">Tillbaka</a>
 
 </div>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>
 
-</body>
-</html>

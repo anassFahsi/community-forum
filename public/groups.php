@@ -26,14 +26,9 @@ $stmt->execute([$user_id]);
 $other_groups=$stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title>Grupper</title>
-</head>
-<body>
 
+
+<?php require_once __DIR__ .'/../includes/header.php' ?>
 <div class="groups-page">
 
     <h1 class="page-title">Grupper</h1>
@@ -73,9 +68,8 @@ $other_groups=$stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 
 </div>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>
 
-</body>
-</html>
 
 
     

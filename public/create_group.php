@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skapa grupp</title>
-</head>
-<body>
+
+
+<?php require_once __DIR__ .'/../includes/header.php' ?>
     <div class="create-group-page">
       <h1 class="page-title">Skapa ny grupp</h1>
       <form class="form" action="store_group.php" method="POST">
@@ -23,6 +18,4 @@
      </form>
     
     </div>
-    
-</body>
-</html>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>  

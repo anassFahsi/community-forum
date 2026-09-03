@@ -39,14 +39,8 @@ if (!$membership) {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title>Skapa diskussion</title>
-</head>
-<body>
 
+<?php require_once __DIR__ .'/../includes/header.php' ?>
 <div class="create-discussion-page">
 
     <h1>Skapa diskussion i <?php echo htmlspecialchars($group['name']); ?></h1>
@@ -65,6 +59,5 @@ if (!$membership) {
     <a href="group.php?id=<?php echo $group_id; ?>" class="btn btn-secondary">Tillbaka</a>
 
 </div>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>
 
-</body>
-</html>

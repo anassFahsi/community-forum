@@ -60,14 +60,9 @@ $stmt->execute([$discussion_id]);
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($discussion['subject']); ?></title>
-</head>
-<body>
 
+
+<?php require_once __DIR__ .'/../includes/header.php' ?>
 <div class="discussion-page">
 
     <h1><?php echo htmlspecialchars($discussion['subject']); ?></h1>
@@ -109,8 +104,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a href="group.php?id=<?php echo $group_id; ?>" class="btn btn-secondary">Tillbaka till gruppen</a>
 
 </div>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>
 
-</body>
-</html>
 
 

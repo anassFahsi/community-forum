@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrera konto</title>
-</head>
-<body>
+
+
+<?php require_once __DIR__ .'/../includes/header.php' ?>
     <h1 class="page-title">Registerera konto</h1>
 
     <form action="register_user.php" method="POST" class="form">
@@ -33,6 +28,4 @@
         
          
     </form>
-    
-</body>
-</html>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>

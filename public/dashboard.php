@@ -9,15 +9,9 @@ if (!isset($_SESSION['user_id'])) {
 $first_name = htmlspecialchars($_SESSION['first_name']);
 ?>
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
 
+
+<?php require_once __DIR__ .'/../includes/header.php' ?>
 <div class="dashboard">
     <h1 class="page-title">Välkommen, <?php echo $first_name; ?>!</h1>
 
@@ -25,7 +19,6 @@ $first_name = htmlspecialchars($_SESSION['first_name']);
 
     <a href="logout.php" class="btn btn-primary dashboard-logout-btn">Logga ut</a>
 </div>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>
 
-</body>
-</html>
 

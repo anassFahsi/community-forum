@@ -69,13 +69,7 @@ $stmt->execute([$group_id]);
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <title>Hantera medlemmar - <?php echo htmlspecialchars($group['name']); ?></title>
-</head>
-<body>
+
 
 <div class="manage-members-page container">
 
@@ -171,6 +165,5 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 </div>
+<?php require_once __DIR__ .'/../includes/footer.php' ?>
 
-</body>
-</html>
