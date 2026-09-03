@@ -64,11 +64,18 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h1 class="page-title"><?php echo htmlspecialchars($group['name']); ?></h1>
     <p class="group-description"><?php echo htmlspecialchars($group['description']); ?></p>
 
+
     <?php if (!$is_member): ?>
         <p class="info-text">Du är inte medlem i denna grupp.</p>
         <a href="join_group.php?id=<?php echo $group_id; ?>" class="btn btn-primary">Gå med i gruppen</a>
     <?php else: ?>
         <p class="info-text">Du är medlem i denna grupp.</p>
+        <?php if ($is_admin): ?>
+          <a href="manage_members.php?group_id=<?php echo $group_id; ?>"    class="btn btn-secondary">
+          Hantera medlemmar
+         </a>
+       <?php endif; ?>
+
 
         <a href="create_discussion.php?group_id=<?php echo $group_id; ?>" class="btn btn-primary">
             Skapa diskussion

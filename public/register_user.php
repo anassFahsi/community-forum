@@ -29,6 +29,7 @@ if (strlen($password) < 6) {
 if (!empty($errors)) {
     foreach ($errors as $error) {
         echo "<p>$error</p>";
+        echo "<a href=register.php> Prova igen </a>";
     }
     exit;
 }
