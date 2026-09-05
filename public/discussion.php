@@ -47,9 +47,10 @@ if (!$membership) {
     exit;
 }
 
+$is_admin=$membership && $membership['role']='admin';
 
 $stmt = $pdo->prepare("
-    SELECT p.id, p.content, p.created_at,
+    SELECT p.id, p.content, p.created_at,user_id,
            u.first_name, u.last_name
     FROM posts p
     JOIN users u ON p.user_id = u.id
@@ -85,6 +86,13 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         Av <?php echo htmlspecialchars($p['first_name'] . ' ' . $p['last_name']); ?>
                         den <?php echo htmlspecialchars($p['created_at']); ?>
                     </p>
+                    <?php if ($p['user_id'] == $user_id || $is_admin): ?>
+                    <a href="../actions/delete_post.php?id=<?php echo $p  ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>"
+                       class="btn btn-danger"
+                       onclick="return confirm('Är du säker på att du vill ta bort detta inlägg?');">
+                       Ta bort
+                    </a>
+                <?php endif; ?>
                 </li>
             <?php endforeach; ?>
         </ul>
