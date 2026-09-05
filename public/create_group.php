@@ -3,7 +3,7 @@
 <?php require_once __DIR__ .'/../includes/header.php' ?>
     <div class="create-group-page">
       <h1 class="page-title">Skapa ny grupp</h1>
-      <form class="form" action="store_group.php" method="POST">
+      <form class="form" action="../actions/store_group.php" method="POST">
         <div class="form-group">
           <label class="form-label" for="name" >Gruppnamn</label>
           <input type="text" id="name" name="name" required>

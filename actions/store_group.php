@@ -2,50 +2,54 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../public/login.php");
     exit;
 }
 
 require_once __DIR__ ."/../includes/db.php";
 $pdo = getPDO();
 
-$user_id = $_SESSION['user_id'];
-$name = trim($_POST['name'] ?? '');
+$user_id     = $_SESSION['user_id'];
+$name        = trim($_POST['name'] ?? '');
 $description = trim($_POST['description'] ?? '');
-$errors = [];
+$errors      = [];
 
+/* Validate group name */
 if ($name === '') {
     $errors[] = "Gruppnamn är obligatoriskt.";
 }
 
+/* Validate description */
 if ($description === '') {
     $errors[] = "Beskrivning är obligatorisk.";
 }
 
+/* Show validation errors */
 if (!empty($errors)) {
-    
     foreach ($errors as $error) {
         echo "<p>$error</p>";
     }
-    echo '<a href="create_group.php">Tillbaka</a>';
+    echo '<a href="../public/create_group.php">Tillbaka</a>';
     exit;
 }
 
 try {
-   
+
+    /* Insert new group */
     $stmt = $pdo->prepare("
         INSERT INTO groups (name, description, created_by)
         VALUES (:name, :description, :created_by)
     ");
     $stmt->execute([
-        ':name' => $name,
+        ':name'        => $name,
         ':description' => $description,
-        ':created_by' => $user_id
+        ':created_by'  => $user_id
     ]);
 
+    /* Get the newly created group ID */
     $group_id = $pdo->lastInsertId();
 
-   
+    /* Add creator as admin */
     $stmt = $pdo->prepare("
         INSERT INTO group_members (user_id, group_id, role)
         VALUES (:user_id, :group_id, 'admin')
@@ -55,13 +59,15 @@ try {
         ':group_id' => $group_id
     ]);
 
-    header("Location: groups.php");
+    header("Location: ../public/groups.php");
     exit;
 
 } catch (PDOException $e) {
-    echo "<p>Kunde inte skapa gruppen. Försök igen.</p>";
-    echo '<a href="create_group.php">Tillbaka</a>';
+
+    echo "<p>Kunde inte skapa grupp. Försök senare.</p>";
+    echo '<a href="../public/create_group.php">Tillbaka</a>';
 }
+
 
 
 

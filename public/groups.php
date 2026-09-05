@@ -29,6 +29,7 @@ $other_groups=$stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <?php require_once __DIR__ .'/../includes/header.php' ?>
+
 <div class="groups-page">
 
     <h1 class="page-title">Grupper</h1>

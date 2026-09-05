@@ -8,6 +8,12 @@ if (session_status() === PHP_SESSION_NONE) {
 <head>
     <meta charset="UTF-8">
     <title>Community Forum</title>
+   <link rel="stylesheet" href="../assets/styles/layout.css?v=<?php echo time(); ?>">
+
+    <link rel="stylesheet" href="../assets/styles/layout.css">
+     <link rel="stylesheet" href="../assets/styles/base.css">
+    <link rel="stylesheet" href="../assets/styles/forms.css">
+    <link rel="stylesheet" href="../assets/styles/pages.css">
 </head>
 <body>
 

@@ -31,7 +31,6 @@ if (!$group) {
     exit;
 }
 
-// Kolla om användaren är admin i gruppen
 $stmt = $pdo->prepare("
     SELECT role
     FROM group_members
@@ -46,7 +45,7 @@ if (!$is_admin) {
     echo "<p>Du måste vara admin i gruppen för att hantera medlemmar.</p>";
     exit;
 }
-// Hämta alla medlemmar
+
 $stmt = $pdo->prepare("
     SELECT gm.id, gm.user_id, gm.role, gm.joined_at,
            u.first_name, u.last_name, u.email
@@ -58,7 +57,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([$group_id]);
 $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-//Hämta pending requests
 $stmt = $pdo->prepare("
     SELECT r.id, r.user_id, r.created_at, u.first_name, u.last_name, u.email
     FROM group_join_requests r
@@ -70,7 +68,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-
+<?php require_once __DIR__ .'/../includes/header.php'?>
 <div class="manage-members-page container">
 
     <h1 class="page-title">
@@ -81,7 +79,6 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         Tillbaka till gruppen
     </a>
 
-    <!-- MEDLEMMAR -->
     <h2 class="section-title">Medlemmar</h2>
 
     <?php if (count($members) === 0): ?>
@@ -107,14 +104,14 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td>
                             <?php if ($m['user_id'] != $user_id): ?>
 
-                                <a href="remove_member.php?id=<?php echo $m['id']; ?>&group_id=<?php echo $group_id; ?>" 
+                                <a href="../actions/remove_member.php?id=<?php echo $m['id']; ?>&group_id=<?php echo $group_id; ?>" 
                                    class="action-link remove-link">
                                     Ta bort
                                 </a>
 
                                 <?php if ($m['role'] !== 'admin'): ?>
                                     |
-                                    <a href="make_admin.php?id=<?php echo $m['id']; ?>&group_id=<?php echo $group_id; ?>" 
+                                    <a href="../acions/make_admin.php?id=<?php echo $m['id']; ?>&group_id=<?php echo $group_id; ?>" 
                                        class="action-link admin-link">
                                         Gör till admin
                                     </a>
@@ -131,7 +128,6 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 
 
-    <!-- ANSÖKNINGAR -->
     <h2 class="section-title">Ansökningar</h2>
 
     <?php if (count($requests) === 0): ?>
@@ -145,12 +141,12 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         (<?php echo htmlspecialchars($req['email']); ?>)
                     </span>
 
-                    <a href="approve_request.php?id=<?php echo $req['id']; ?>&group_id=<?php echo $group_id; ?>" 
+                    <a href="../actions/approve_request.php?id=<?php echo $req['id']; ?>&group_id=<?php echo $group_id; ?>" 
                        class="action-link approve-link">
                         Godkänn
                     </a>
                     |
-                    <a href="reject_request.php?id=<?php echo $req['id']; ?>&group_id=<?php echo $group_id; ?>" 
+                    <a href="../actions/reject_request.php?id=<?php echo $req['id']; ?>&group_id=<?php echo $group_id; ?>" 
                        class="action-link reject-link">
                         Neka
                     </a>
@@ -159,7 +155,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </ul>
     <?php endif; ?>
 
-    <a href="create_invite.php?group_id=<?php echo $group_id; ?>" class="btn  btn-primary">
+    <a href="actions/create_invite.php?group_id=<?php echo $group_id; ?>" class="btn  btn-primary">
      Skapa inbjudningslänk
    </a>
 

@@ -29,7 +29,7 @@ if (strlen($password) < 6) {
 if (!empty($errors)) {
     foreach ($errors as $error) {
         echo "<p>$error</p>";
-        echo "<a href=register.php> Prova igen </a>";
+        echo "<a href=../public/register.php> Prova igen </a>";
     }
     exit;
 }
@@ -49,7 +49,7 @@ try {
         ':password_hash' => $password_hash,
     ]);
 
-    header('Location: register_success.php');
+    header('Location: ../public/register_success.php');
     exit;
 
 } catch (PDOException $e) {

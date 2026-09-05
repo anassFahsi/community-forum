@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../public/login.php");
     exit;
 }
 
@@ -28,10 +28,11 @@ if (!empty($errors)) {
     foreach ($errors as $e) {
         echo "<p>$e</p>";
     }
-    echo '<a href="discussion.php?id=' . htmlspecialchars($discussion_id) . '">Tillbaka</a>';
+    echo '<a href="../public/discussion.php?id=' . htmlspecialchars($discussion_id) . '">Tillbaka</a>';
     exit;
 }
 
+/* Fetch discussion */
 $stmt = $pdo->prepare("
     SELECT id, group_id 
     FROM discussions 
@@ -47,7 +48,7 @@ if (!$discussion) {
 
 $group_id = $discussion['group_id'];
 
-// Kontrollera att användaren är medlem i gruppen
+/* Check if the user is a member */
 $stmt = $pdo->prepare("
     SELECT id 
     FROM group_members 
@@ -61,11 +62,12 @@ if (!$membership) {
     exit;
 }
 
+/* Insert post */
 $stmt = $pdo->prepare("
     INSERT INTO posts (discussion_id, user_id, content)
     VALUES (?, ?, ?)
 ");
 $stmt->execute([$discussion_id, $user_id, $content]);
 
-header("Location: discussion.php?id=" . $discussion_id);
+header("Location: ../public/discussion.php?id=" . $discussion_id);
 exit;

@@ -18,7 +18,7 @@ if (!$member_id || !$group_id) {
     exit;
 }
 
-// Kontrollera att gruppen finns
+/* Check if the group exists */
 $stmt = $pdo->prepare("SELECT id, name FROM groups WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -28,7 +28,7 @@ if (!$group) {
     exit;
 }
 
-// Kontrollera att användaren är admin
+/* Verify that the user is an admin */
 $stmt = $pdo->prepare("
     SELECT role 
     FROM group_members 
@@ -42,7 +42,7 @@ if (!$membership || $membership['role'] !== 'admin') {
     exit;
 }
 
-// Hämta medlemmen som ska bli admin
+/* Fetch the member who will be promoted to admin */
 $stmt = $pdo->prepare("
     SELECT id, user_id, role
     FROM group_members
@@ -56,13 +56,13 @@ if (!$member) {
     exit;
 }
 
-// Admin får inte ändra sin egen roll 
+/* Admin cannot modify their own role */
 if ($member['user_id'] == $user_id) {
     echo "<p>Du kan inte ändra din egen roll.</p>";
     exit;
 }
 
-// Uppdatera rollen till admin
+/* Update the role to admin */
 $stmt = $pdo->prepare("
     UPDATE group_members
     SET role = 'admin'
@@ -70,6 +70,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$member_id]);
 
-// Redirect tillbaka
-header("Location: manage_members.php?group_id=" . $group_id);
+/* Redirect back to member management */
+header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
+
+
+

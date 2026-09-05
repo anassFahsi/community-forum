@@ -92,7 +92,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <h3>Skriv ett inlägg</h3>
 
-    <form action="store_post.php" method="POST">
+    <form action="../actions/store_post.php" method="POST">
         <input type="hidden" name="discussion_id" value="<?php echo $discussion_id; ?>">
 
         <textarea name="content" rows="4" cols="50" required></textarea><br><br>

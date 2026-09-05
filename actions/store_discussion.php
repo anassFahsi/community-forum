@@ -2,15 +2,14 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../public/login.php");
     exit;
 }
 
 require_once __DIR__ . '/../includes/db.php';
 $pdo = getPDO();
 
-$user_id = $_SESSION['user_id'];
-
+$user_id  = $_SESSION['user_id'];
 $group_id = $_POST['group_id'] ?? null;
 $subject  = trim($_POST['subject'] ?? '');
 
@@ -21,17 +20,18 @@ if (!$group_id) {
 }
 
 if ($subject === '') {
-    $errors[] = "Ämnet är obligatoriskt.";
+    $errors[] = "Ämne är obligatoriskt.";
 }
 
 if (!empty($errors)) {
     foreach ($errors as $e) {
         echo "<p>$e</p>";
     }
-    echo '<a href="create_discussion.php?group_id=' . htmlspecialchars($group_id) . '">Tillbaka</a>';
+    echo '<a href="../public/create_discussion.php?group_id=' . htmlspecialchars($group_id) . '">Tillbaka</a>';
     exit;
 }
 
+/* Check if the group exists */
 $stmt = $pdo->prepare("SELECT id FROM groups WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -41,6 +41,7 @@ if (!$group) {
     exit;
 }
 
+/* Check if user is a member of the group */
 $stmt = $pdo->prepare("
     SELECT id 
     FROM group_members 
@@ -54,14 +55,16 @@ if (!$membership) {
     exit;
 }
 
-
+/* Insert new discussion */
 $stmt = $pdo->prepare("
     INSERT INTO discussions (group_id, subject, created_by)
     VALUES (?, ?, ?)
 ");
 $stmt->execute([$group_id, $subject, $user_id]);
 
+/* Get ID of the newly created discussion */
 $discussion_id = $pdo->lastInsertId();
 
-header("Location: discussion.php?id=" . $discussion_id);
+header("Location: ../public/discussion.php?id=" . $discussion_id);
 exit;
+

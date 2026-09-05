@@ -11,6 +11,7 @@ session_start();
 <body>
 
 <?php require_once __DIR__ .'/../includes/header.php' ?>
+
 <div class="index-page">
 
     <h1 class="page-title">Välkommen till Community Forum</h1>

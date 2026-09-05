@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../public/login.php");
     exit;
 }
 
@@ -18,7 +18,7 @@ if (!$member_id || !$group_id) {
     exit;
 }
 
-// Kontrollera att gruppen finns
+/* Check if the group exists */
 $stmt = $pdo->prepare("SELECT id, name FROM groups WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -28,7 +28,7 @@ if (!$group) {
     exit;
 }
 
-// Kontrollera att användaren är admin
+/* Verify that the user is an admin */
 $stmt = $pdo->prepare("
     SELECT role 
     FROM group_members 
@@ -42,7 +42,7 @@ if (!$membership || $membership['role'] !== 'admin') {
     exit;
 }
 
-// Hämta medlemmen som ska tas bort
+/* Fetch the member to be removed */
 $stmt = $pdo->prepare("
     SELECT id, user_id, role
     FROM group_members
@@ -56,21 +56,24 @@ if (!$member) {
     exit;
 }
 
-// Admin får inte ta bort sig själv
+/* Admin cannot remove themselves */
 if ($member['user_id'] == $user_id) {
     echo "<p>Du kan inte ta bort dig själv från gruppen.</p>";
     exit;
 }
 
-// Ta bort medlemmen
+/* Remove the member */
 $stmt = $pdo->prepare("
     DELETE FROM group_members
     WHERE id = ?
 ");
 $stmt->execute([$member_id]);
 
-header("Location: manage_members.php?group_id=" . $group_id);
+/* Redirect back to member management */
+header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
+
+
 
 
 

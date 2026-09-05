@@ -45,7 +45,7 @@ if (!$membership) {
 
     <h1>Skapa diskussion i <?php echo htmlspecialchars($group['name']); ?></h1>
 
-    <form action="store_discussion.php" method="POST" class="form">
+    <form action="../actions/store_discussion.php" method="POST" class="form">
 
         <input class="form-label" type="hidden" name="group_id" value="<?php echo $group_id; ?>">
 

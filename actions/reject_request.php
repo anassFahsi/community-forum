@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../public/login.php");
     exit;
 }
 
@@ -18,7 +18,7 @@ if (!$request_id || !$group_id) {
     exit;
 }
 
-// Kontrollera att gruppen finns
+/* Check if the group exists */
 $stmt = $pdo->prepare("SELECT id, name FROM groups WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -28,7 +28,7 @@ if (!$group) {
     exit;
 }
 
-// Kontrollera att användaren är admin
+/* Verify that the user is an admin */
 $stmt = $pdo->prepare("
     SELECT role 
     FROM group_members 
@@ -42,7 +42,7 @@ if (!$membership || $membership['role'] !== 'admin') {
     exit;
 }
 
-// Hämta ansökan
+/* Fetch the join request */
 $stmt = $pdo->prepare("
     SELECT id, user_id, group_id, status
     FROM group_join_requests
@@ -56,12 +56,13 @@ if (!$request) {
     exit;
 }
 
+/* Request already processed? */
 if ($request['status'] !== 'pending') {
     echo "<p>Ansökan är redan hanterad.</p>";
     exit;
 }
 
-// Uppdatera ansökan till rejected
+/* Update request status to rejected */
 $stmt = $pdo->prepare("
     UPDATE group_join_requests
     SET status = 'rejected'
@@ -69,6 +70,7 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$request_id]);
 
-
-header("Location: manage_members.php?group_id=" . $group_id);
+/* Redirect back to member management */
+header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
+

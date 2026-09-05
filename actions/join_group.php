@@ -2,14 +2,14 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../public/login.php");
     exit;
 }
 
 require_once __DIR__ . '/../includes/db.php';
 $pdo = getPDO();
 
-$user_id = $_SESSION['user_id'];
+$user_id  = $_SESSION['user_id'];
 $group_id = $_GET['id'] ?? null;
 
 if (!$group_id) {
@@ -17,7 +17,7 @@ if (!$group_id) {
     exit;
 }
 
-// Kontrollera att gruppen finns
+/* Check if the group exists */
 $stmt = $pdo->prepare("SELECT id FROM groups WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,7 +27,7 @@ if (!$group) {
     exit;
 }
 
-// Kontrollera om användaren redan är medlem
+/* Check if the user is already a member */
 $stmt = $pdo->prepare("
     SELECT id 
     FROM group_members 
@@ -41,7 +41,7 @@ if ($existing_member) {
     exit;
 }
 
-// Kontrollera om användaren redan har en ansökan
+/* Check if the user already has a join request */
 $stmt = $pdo->prepare("
     SELECT id, status
     FROM group_join_requests
@@ -56,7 +56,7 @@ if ($existing_request) {
     exit;
 }
 
-// Skapa ansökan
+/* Create a new join request */
 $stmt = $pdo->prepare("
     INSERT INTO group_join_requests (user_id, group_id, status)
     VALUES (?, ?, 'pending')
@@ -66,3 +66,5 @@ $stmt->execute([$user_id, $group_id]);
 echo "<p>Din ansökan har skickats!</p>";
 echo '<a href="group.php?id=' . $group_id . '">Tillbaka</a>';
 exit;
+
+
