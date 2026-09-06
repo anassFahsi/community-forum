@@ -58,7 +58,7 @@ CREATE TABLE posts (
     user_id INT NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (discussion_id) REFERENCES discussions(id),
+    FOREIGN KEY (discussion_id) REFERENCES discussions(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

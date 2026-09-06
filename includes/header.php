@@ -23,10 +23,10 @@ if (session_status() === PHP_SESSION_NONE) {
         <a href="groups.php" class="nav-link">Grupper</a>
 
         <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="logout.php" class="nav-link">Logga ut</a>
+            <a href="../actions/logout.php" class="nav-link">Logga ut</a>
         <?php else: ?>
-            <a href="login.php" class="nav-link">Logga in</a>
-            <a href="register.php" class="nav-link">Registrera</a>
+            <a href="../public/login.php" class="nav-link">Logga in</a>
+            <a href="../public/register.php" class="nav-link">Registrera</a>
         <?php endif; ?>
     </nav>
 </header>

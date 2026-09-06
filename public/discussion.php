@@ -87,9 +87,9 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         den <?php echo htmlspecialchars($p['created_at']); ?>
                     </p>
                     <?php if ($p['user_id'] == $user_id || $is_admin): ?>
-                    <a href="../actions/delete_post.php?id=<?php echo $p  ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>"
+                    <a href="#"
                        class="btn btn-danger"
-                       onclick="return confirm('Är du säker på att du vill ta bort detta inlägg?');">
+                       onclick="openDeleteModal('../actions/delete_post.php?id=<?php echo $p  ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>');return false">
                        Ta bort
                     </a>
                 <?php endif; ?>
@@ -112,6 +112,31 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a href="group.php?id=<?php echo $group_id; ?>" class="btn btn-secondary">Tillbaka till gruppen</a>
 
 </div>
+<div id="deleteModal" class="modal-overlay" style="display:none;" >
+     <div class="modal-box">
+        <h3>Ta bort inlägg</h3>
+        <p>Är du säker på att du vill ta bort detta inlägg?</p>
+
+        <div class="modal-actions">
+            <button id="cancelDelete" class="btn btn-secondary">Avbryt</button>
+            <a id="confirmDelete" href="#" class="btn btn-danger">Ta bort</a>
+        </div>
+    </div>
+</div>
+<script>
+    function openDeleteModal(deleteUrl) {
+        const modal = document.getElementById('deleteModal');
+        const confirmBtn = document.getElementById('confirmDelete');
+
+        confirmBtn.href = deleteUrl;
+        modal.style.display = 'flex';
+    }
+
+    document.getElementById('cancelDelete').onclick = function() {
+        document.getElementById('deleteModal').style.display = 'none';
+    };
+</script>
+
 <?php require_once __DIR__ .'/../includes/footer.php' ?>
 
 

@@ -91,6 +91,13 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             Skapad av <?php echo htmlspecialchars($d['first_name'].' '.$d['last_name']); ?>
                             den <?php echo htmlspecialchars($d['created_at']); ?>
                         </p>
+                        <a href="#"
+                            class="btn btn-danger"
+                            onclick="openDeleteModale('../actions/delete_discussion.php?id=<?php echo $d['id']?>&group_id=<?php echo $group_id;?>');return false">
+                            Ta bort 
+                        </a>
+
+
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -99,6 +106,31 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 
     <a href="groups.php" class="btn btn-secondary">Tillbaka</a>
+
+    <div id="deleteModal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3>Ta bort diskussion</h3>
+            <p>Är du säker på att du vill ta bort denna diskussion?</p>
+            <div class="modal-actions">
+                <button id="cancelDelete" class="btn-secondary">Avbryt</button>
+                <a id="confirmDelete" href="#" class="btn-danger">Ta bort</a>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        function openDeleteModal(deleteUrl) {
+            const modal = document.getElementById('deleteModal');
+            const confirmBtn = document.getElementById('confirmDelete');
+
+            confirmBtn.href = deleteUrl;
+            modal.style.display = 'flex';
+        }
+
+        document.getElementById('cancelDelete').onclick = function() {
+            document.getElementById('deleteModal').style.display = 'none';
+        };
+   </script>
 
 </div>
 <?php require_once __DIR__ .'/../includes/footer.php' ?>
