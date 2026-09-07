@@ -81,12 +81,19 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <ul class="post-list">
             <?php foreach ($posts as $p): ?>
                 <li class="post-item">
-                    <p><?php echo nl2br(htmlspecialchars($p['content'])); ?></p>
+                    <p class="post-content"><?php echo nl2br(htmlspecialchars($p['content'])); ?></p>
                     <p class="post-meta">
                         Av <?php echo htmlspecialchars($p['first_name'] . ' ' . $p['last_name']); ?>
                         den <?php echo htmlspecialchars($p['created_at']); ?>
                     </p>
                     <?php if ($p['user_id'] == $user_id || $is_admin): ?>
+                        <?php if ($p['user_id'] == $user_id || $is_admin): ?>
+                    <a href="../public/edit_post.php?id=<?php echo $p    ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>"
+                    class="btn btn-secondary">
+                    Redigera
+                    </a>
+                      <?php endif; ?>
+
                     <a href="#"
                        class="btn btn-danger"
                        onclick="openDeleteModal('../actions/delete_post.php?id=<?php echo $p  ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>');return false">
@@ -118,7 +125,7 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p>Är du säker på att du vill ta bort detta inlägg?</p>
 
         <div class="modal-actions">
-            <button id="cancelDelete" class="btn btn-secondary">Avbryt</button>
+            <button id="cancelDelete" class="modal-btn-secondary">Avbryt</button>
             <a id="confirmDelete" href="#" class="btn btn-danger">Ta bort</a>
         </div>
     </div>

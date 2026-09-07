@@ -40,7 +40,7 @@ if (strtotime($invite['expires_at']) < time()) {
 /* Must be logged in */
 if (!isset($_SESSION['user_id'])) {
     echo "<p>Du måste logga in för att använda inbjudningslänken.</p>";
-    echo "<a href='login.php'>Logga in</a>";
+    echo "<a href='../public/login.php'>Logga in</a>";
     exit;
 }
 

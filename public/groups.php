@@ -62,7 +62,7 @@ $other_groups=$stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li class="group-item">
                     <h3 class="group-name"><?php echo htmlspecialchars($group['name']); ?></h3>
                     <p class="group-description"><?php echo htmlspecialchars($group['description']); ?></p>
-                    <a href="join_group.php?id=<?php echo $group['id']; ?>" class="btn btn-primary">Gå med i gruppen</a>
+                    <a href="../actions/join_group.php?id=<?php echo $group['id']; ?>" class="btn btn-primary">Gå med i gruppen</a>
                 </li>
             <?php endforeach; ?>
         </ul>

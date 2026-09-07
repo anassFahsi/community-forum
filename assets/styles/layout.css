@@ -27,7 +27,7 @@
 /* Main + footer */
 
  .main-content {
-  max-width: 100vb;
+  width: 80%;
   margin: 20px auto;
   background: #fdf7f2;
   border-radius: 10px;

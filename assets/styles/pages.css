@@ -249,3 +249,9 @@
     color: #555;
   }
 }
+
+.post-item p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}

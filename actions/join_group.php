@@ -37,7 +37,7 @@ $stmt->execute([$user_id, $group_id]);
 $existing_member = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existing_member) {
-    header("Location: group.php?id=" . $group_id);
+    header("Location: ../public/group.php?id=" . $group_id);
     exit;
 }
 
@@ -52,7 +52,7 @@ $existing_request = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existing_request) {
     echo "<p>Du har redan en ansökan med status: " . htmlspecialchars($existing_request['status']) . "</p>";
-    echo '<a href="group.php?id=' . $group_id . '">Tillbaka</a>';
+    echo '<a href="../public/group.php?id=' . $group_id . '">Tillbaka</a>';
     exit;
 }
 
@@ -64,7 +64,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id, $group_id]);
 
 echo "<p>Din ansökan har skickats!</p>";
-echo '<a href="group.php?id=' . $group_id . '">Tillbaka</a>';
+echo '<a href="../public/group.php?id=' . $group_id . '">Tillbaka</a>';
 exit;
 
 

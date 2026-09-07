@@ -93,7 +93,7 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </p>
                         <a href="#"
                             class="btn btn-danger"
-                            onclick="openDeleteModale('../actions/delete_discussion.php?id=<?php echo $d['id']?>&group_id=<?php echo $group_id;?>');return false">
+                            onclick="openDeleteModal('../actions/delete_discussion.php?id=<?php echo $d['id']?>&group_id=<?php echo $group_id;?>');return false">
                             Ta bort 
                         </a>
 
