@@ -6,18 +6,18 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
-
 require_once __DIR__ . '/../includes/db.php';
 $pdo = getPDO();
 
-$post_id = $_GET['id'] ?? null;
+$user_id       = $_SESSION['user_id'];
+$post_id       = $_GET['id'] ?? null;
 $discussion_id = $_GET['discussion_id'] ?? null;
 
 if (!$post_id || !$discussion_id) {
     echo "Felaktig förfrågan";
     exit;
 }
+
 
 $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
 $stmt->execute([$post_id]);
@@ -28,12 +28,24 @@ if (!$post) {
     exit;
 }
 
+
+$stmt = $pdo->prepare("SELECT group_id FROM discussions WHERE id = ?");
+$stmt->execute([$discussion_id]);
+$discussion = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$discussion) {
+    echo "Diskussionen finns inte";
+    exit;
+}
+
+$group_id = $discussion['group_id'];
+
 $stmt = $pdo->prepare("
     SELECT role 
     FROM group_members 
     WHERE group_id = ? AND user_id = ?
 ");
-$stmt->execute([$post['discussion_id'], $user_id]);
+$stmt->execute([$group_id, $user_id]);
 $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $is_admin = $membership && $membership['role'] === 'admin';
@@ -62,13 +74,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php require_once __DIR__.'/../includes/header.php' ?>
 
-<h2>Redigera inlägg</h2>
+<div class="max-w-2xl mx-auto bg-white p-8 rounded shadow mt-16">
 
-<form method="POST">
-    <textarea name="content" rows="6" style="width:100%;"><?php echo htmlspecialchars($post['content']); ?></textarea>
-    <br><br>
-    <button type="submit" class="btn btn-secondary">Spara ändringar</button>
-    <a href="discussion.php?id=<?php echo $discussion_id; ?>" class="btn-danger">Avbryt</a>
-</form>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Redigera inlägg</h2>
+
+    <form method="POST" class="space-y-5">
+
+        <textarea name="content" rows="6"
+                  class="w-full border border-gray-300 rounded px-3 py-2
+                         focus:outline-none focus:ring focus:ring-blue-300
+                         break-words overflow-wrap-anywhere"
+                  required><?php echo htmlspecialchars($post['content']); ?></textarea>
+
+        <div class="flex gap-4">
+            <button type="submit"
+                    class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+                Spara ändringar
+            </button>
+
+            <a href="discussion.php?id=<?php echo $discussion_id; ?>"
+               class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                Avbryt
+            </a>
+        </div>
+
+    </form>
+
+</div>
 
 <?php require_once __DIR__.'/../includes/footer.php' ?>
+
+

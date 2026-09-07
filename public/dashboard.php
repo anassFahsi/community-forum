@@ -9,16 +9,26 @@ if (!isset($_SESSION['user_id'])) {
 $first_name = htmlspecialchars($_SESSION['first_name']);
 ?>
 
-
-
 <?php require_once __DIR__ .'/../includes/header.php' ?>
-<div class="dashboard">
-    <h1 class="page-title">Välkommen, <?php echo $first_name; ?>!</h1>
 
-    <p class="dashboard-text">Du är nu inloggad.</p>
+<div class="max-w-md mx-auto bg-white p-8 rounded shadow mt-16 text-center">
 
-    <a href="logout.php" class="btn btn-primary dashboard-logout-btn">Logga ut</a>
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">
+        Välkommen, <?php echo $first_name; ?>!
+    </h1>
+
+    <p class="text-gray-600 mb-8">
+        Du är nu inloggad.
+    </p>
+
+    <a href="logout.php"
+       class="inline-block bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition">
+        Logga ut
+    </a>
+
 </div>
+
 <?php require_once __DIR__ .'/../includes/footer.php' ?>
+
 
 

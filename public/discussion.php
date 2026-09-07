@@ -35,8 +35,8 @@ if (!$discussion) {
 $group_id = $discussion['group_id'];
 
 $stmt = $pdo->prepare("
-    SELECT id 
-    FROM group_members 
+    SELECT role
+    FROM group_members
     WHERE user_id = ? AND group_id = ?
 ");
 $stmt->execute([$user_id, $group_id]);
@@ -47,10 +47,10 @@ if (!$membership) {
     exit;
 }
 
-$is_admin=$membership && $membership['role']='admin';
+$is_admin = $membership && $membership['role'] === 'admin';
 
 $stmt = $pdo->prepare("
-    SELECT p.id, p.content, p.created_at,user_id,
+    SELECT p.id, p.content, p.created_at, p.user_id,
            u.first_name, u.last_name
     FROM posts p
     JOIN users u ON p.user_id = u.id
@@ -59,92 +59,127 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$discussion_id]);
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
-
 <?php require_once __DIR__ .'/../includes/header.php' ?>
-<div class="discussion-page">
 
-    <h1><?php echo htmlspecialchars($discussion['subject']); ?></h1>
+<div class="max-w-4xl mx-auto mt-10">
 
-    <p class="discussion-meta">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">
+        <?php echo htmlspecialchars($discussion['subject']); ?>
+    </h1>
+
+    <p class="text-gray-600 mb-6">
         Startad av <?php echo htmlspecialchars($discussion['first_name'] . ' ' . $discussion['last_name']); ?>
         den <?php echo htmlspecialchars($discussion['created_at']); ?>
     </p>
 
-    <h2>Inlägg</h2>
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Inlägg</h2>
 
     <?php if (count($posts) === 0): ?>
-        <p>Inga inlägg ännu.</p>
+        <p class="text-gray-600 mb-6">Inga inlägg ännu.</p>
     <?php else: ?>
-        <ul class="post-list">
+        <ul class="space-y-4 mb-10">
             <?php foreach ($posts as $p): ?>
-                <li class="post-item">
-                    <p class="post-content"><?php echo nl2br(htmlspecialchars($p['content'])); ?></p>
-                    <p class="post-meta">
+                <li class="bg-white p-5 rounded shadow">
+
+                    <p class="text-gray-800 whitespace-pre-line break-words overflow-wrap-anywhere">
+
+                        <?php echo nl2br(htmlspecialchars($p['content'])); ?>
+                    </p>
+
+                    <p class="text-gray-600 mt-2 mb-4">
                         Av <?php echo htmlspecialchars($p['first_name'] . ' ' . $p['last_name']); ?>
                         den <?php echo htmlspecialchars($p['created_at']); ?>
                     </p>
-                    <?php if ($p['user_id'] == $user_id || $is_admin): ?>
-                        <?php if ($p['user_id'] == $user_id || $is_admin): ?>
-                    <a href="../public/edit_post.php?id=<?php echo $p    ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>"
-                    class="btn btn-secondary">
-                    Redigera
-                    </a>
-                      <?php endif; ?>
 
-                    <a href="#"
-                       class="btn btn-danger"
-                       onclick="openDeleteModal('../actions/delete_post.php?id=<?php echo $p  ['id']; ?>&discussion_id=<?php echo $discussion_id; ?>');return false">
-                       Ta bort
-                    </a>
-                <?php endif; ?>
+                    <?php if ($p['user_id'] == $user_id || $is_admin): ?>
+
+                        <a href="../public/edit_post.php?id=<?php echo $p['id']; ?>&discussion_id=<?php echo $discussion_id; ?>"
+                           class="inline-block bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition mr-2">
+                           Redigera
+                        </a>
+
+                        <a href="#"
+                           class="inline-block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+                           onclick="openDeleteModal('../actions/delete_post.php?id=<?php echo $p['id']; ?>&discussion_id=<?php echo $discussion_id; ?>'); return false;">
+                           Ta bort
+                        </a>
+
+                    <?php endif; ?>
+
                 </li>
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
 
-    <h3>Skriv ett inlägg</h3>
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Skriv ett inlägg</h3>
 
-    <form action="../actions/store_post.php" method="POST">
+    <form action="../actions/store_post.php" method="POST" class="space-y-4 mb-10">
         <input type="hidden" name="discussion_id" value="<?php echo $discussion_id; ?>">
 
-        <textarea name="content" rows="4" cols="50" required></textarea><br><br>
+        <textarea name="content" rows="4"
+                  class="w-full border border-gray-300 rounded px-3 py-2
+                         focus:outline-none focus:ring focus:ring-blue-300"
+                  required></textarea>
 
-        <button type="submit" class="btn btn-primary">Skicka</button>
+        <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            Skicka
+        </button>
     </form>
 
-    <br>
-    <a href="group.php?id=<?php echo $group_id; ?>" class="btn btn-secondary">Tillbaka till gruppen</a>
+    <a href="group.php?id=<?php echo $group_id; ?>"
+       class="inline-block bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+        Tillbaka till gruppen
+    </a>
 
 </div>
-<div id="deleteModal" class="modal-overlay" style="display:none;" >
-     <div class="modal-box">
-        <h3>Ta bort inlägg</h3>
-        <p>Är du säker på att du vill ta bort detta inlägg?</p>
 
-        <div class="modal-actions">
-            <button id="cancelDelete" class="modal-btn-secondary">Avbryt</button>
-            <a id="confirmDelete" href="#" class="btn btn-danger">Ta bort</a>
+<div id="deleteModal"
+     class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+
+    <div class="bg-white p-6 rounded shadow max-w-sm w-full">
+        <h3 class="text-xl font-semibold mb-3">Ta bort inlägg</h3>
+
+        <p class="text-gray-700 mb-6">
+            Är du säker på att du vill ta bort detta inlägg?
+        </p>
+
+        <div class="flex justify-end gap-3">
+            <button id="cancelDelete"
+                    class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+                Avbryt
+            </button>
+
+            <a id="confirmDelete"
+               href="#"
+               class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+               Ta bort
+            </a>
         </div>
     </div>
 </div>
+
 <script>
     function openDeleteModal(deleteUrl) {
         const modal = document.getElementById('deleteModal');
         const confirmBtn = document.getElementById('confirmDelete');
 
         confirmBtn.href = deleteUrl;
-        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     }
 
     document.getElementById('cancelDelete').onclick = function() {
-        document.getElementById('deleteModal').style.display = 'none';
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     };
 </script>
 
 <?php require_once __DIR__ .'/../includes/footer.php' ?>
+
 
 
 

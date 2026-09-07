@@ -26,7 +26,7 @@ CREATE TABLE group_members (
     role ENUM ('member','admin') DEFAULT 'member',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (group_id) REFERENCES groups (id)
+    FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
 )
 
 --group_join_requests
@@ -37,7 +37,7 @@ CREATE TABLE group_join_requests (
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (group_id) REFERENCES groups(id)
+    FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 );
 
 -- discussions
@@ -47,7 +47,7 @@ CREATE TABLE discussions (
     subject VARCHAR(255) NOT NULL,
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (group_id) REFERENCES groups(id),
+    FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
     FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
@@ -69,5 +69,5 @@ CREATE TABLE invitation_links (
     token VARCHAR(255) NOT NULL UNIQUE,
     expires_at DATETIME NOT NULL,
     used BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (group_id) REFERENCES groups(id)
+    FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 );
