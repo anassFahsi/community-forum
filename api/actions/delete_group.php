@@ -19,7 +19,7 @@ if (!$group_id) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT id, name, created_by FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id, name, created_by FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -33,7 +33,7 @@ if ($group['created_by'] != $user_id) {
     exit;
 }
 
-$stmt = $pdo->prepare("DELETE FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("DELETE FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 
 header("Location: ../public/groups.php?deleted=1");

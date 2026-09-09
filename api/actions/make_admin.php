@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../public/login.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -18,8 +18,7 @@ if (!$member_id || !$group_id) {
     exit;
 }
 
-/* Check if the group exists */
-$stmt = $pdo->prepare("SELECT id, name FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id, name FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -38,11 +37,10 @@ $stmt->execute([$user_id, $group_id]);
 $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$membership || $membership['role'] !== 'admin') {
-    echo "<p>Endast administratörer kan ta bort medlemmar.</p>";
+    echo "<p>Endast administratörer kan ändra roller.</p>";
     exit;
 }
 
-/* Fetch the member to be removed */
 $stmt = $pdo->prepare("
     SELECT id, user_id, role
     FROM group_members
@@ -56,24 +54,21 @@ if (!$member) {
     exit;
 }
 
-/* Admin cannot remove themselves */
+/* Admin cannot modify their own role */
 if ($member['user_id'] == $user_id) {
-    echo "<p>Du kan inte ta bort dig själv från gruppen.</p>";
+    echo "<p>Du kan inte ändra din egen roll.</p>";
     exit;
 }
 
-/* Remove the member */
 $stmt = $pdo->prepare("
-    DELETE FROM group_members
+    UPDATE group_members
+    SET role = 'admin'
     WHERE id = ?
 ");
 $stmt->execute([$member_id]);
 
-/* Redirect back to member management */
 header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
-
-
 
 
 

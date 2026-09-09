@@ -19,7 +19,7 @@ if (!$group_id) {
 
 $stmt = $pdo->prepare("
     SELECT id, name, created_by
-    FROM groups
+    FROM `groups`
     WHERE id = ?
 ");
 $stmt->execute([$group_id]);

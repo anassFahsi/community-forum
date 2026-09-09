@@ -18,8 +18,7 @@ if (!$request_id || !$group_id) {
     exit;
 }
 
-/* Check if the group exists */
-$stmt = $pdo->prepare("SELECT id, name FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id, name FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -42,7 +41,6 @@ if (!$membership || $membership['role'] !== 'admin') {
     exit;
 }
 
-/* Fetch the join request */
 $stmt = $pdo->prepare("
     SELECT id, user_id, group_id, status
     FROM group_join_requests
@@ -65,14 +63,12 @@ if ($request['status'] !== 'pending') {
 /* User ID of the person who requested to join */
 $requested_user_id = $request['user_id'];
 
-/* Add the user as a member */
 $stmt = $pdo->prepare("
     INSERT INTO group_members (user_id, group_id, role)
     VALUES (?, ?, 'member')
 ");
 $stmt->execute([$requested_user_id, $group_id]);
 
-/* Mark the request as approved */
 $stmt = $pdo->prepare("
     UPDATE group_join_requests
     SET status = 'approved'
@@ -80,7 +76,6 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$request_id]);
 
-/* Redirect back to member management */
 header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
 

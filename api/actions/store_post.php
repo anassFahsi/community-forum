@@ -32,7 +32,7 @@ if (!empty($errors)) {
     exit;
 }
 
-/* Fetch discussion */
+
 $stmt = $pdo->prepare("
     SELECT id, group_id 
     FROM discussions 
@@ -62,7 +62,6 @@ if (!$membership) {
     exit;
 }
 
-/* Insert post */
 $stmt = $pdo->prepare("
     INSERT INTO posts (discussion_id, user_id, content)
     VALUES (?, ?, ?)

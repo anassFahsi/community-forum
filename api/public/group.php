@@ -17,7 +17,7 @@ if (!$group_id) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -132,7 +132,6 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </div>
 
-<!-- Delete Discussion Modal -->
 <div id="deleteModal"
      class="fixed inset-0 bg-black/60 hidden items-center justify-center">
 
@@ -158,7 +157,6 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- Delete Group Modal -->
 <div id="deleteGroupModal"
      class="fixed inset-0 bg-black/60 hidden items-center justify-center">
 

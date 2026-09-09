@@ -37,7 +37,6 @@ if (strtotime($invite['expires_at']) < time()) {
     exit;
 }
 
-/* Must be logged in */
 if (!isset($_SESSION['user_id'])) {
     echo "<p>Du måste logga in för att använda inbjudningslänken.</p>";
     echo "<a href='../public/login.php'>Logga in</a>";
@@ -47,7 +46,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $group_id = $invite['group_id'];
 
-/* Already a member? */
 $stmt = $pdo->prepare("
     SELECT id FROM group_members
     WHERE user_id = ? AND group_id = ?
@@ -75,7 +73,6 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$invite['id']]);
 
-/* Redirect to group page */
 header("Location: ../public/group.php?id=" . $group_id);
 exit;
 

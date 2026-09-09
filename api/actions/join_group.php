@@ -17,8 +17,7 @@ if (!$group_id) {
     exit;
 }
 
-/* Check if the group exists */
-$stmt = $pdo->prepare("SELECT id FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -27,7 +26,6 @@ if (!$group) {
     exit;
 }
 
-/* Check if the user is already a member */
 $stmt = $pdo->prepare("
     SELECT id 
     FROM group_members 
@@ -52,7 +50,7 @@ $existing_request = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existing_request) {
     echo "<p>Du har redan en ansökan med status: " . htmlspecialchars($existing_request['status']) . "</p>";
-    echo '<a href="../public/group.php?id=' . $group_id . '">Tillbaka</a>';
+    echo '<a href="../public/groups.php">Tillbaka</a>';
     exit;
 }
 
@@ -64,7 +62,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id, $group_id]);
 
 echo "<p>Din ansökan har skickats!</p>";
-echo '<a href="../public/group.php?id=' . $group_id . '">Tillbaka</a>';
+echo '<a href="../public/groups.php">Tillbaka</a>';
 exit;
 
 

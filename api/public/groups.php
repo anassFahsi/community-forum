@@ -13,16 +13,18 @@ $user_id = $_SESSION['user_id'];
 $pdo = getPDO();
 
 $stmt = $pdo->prepare("
-    SELECT * FROM groups g
-    JOIN group_members gm ON gm.group_id = g.id
-    WHERE gm.user_id = ?
+SELECT g.id, g.name, g.description
+FROM `groups` g
+JOIN group_members gm ON gm.group_id = g.id
+WHERE gm.user_id = ?
+
 ");
 $stmt->execute([$user_id]);
 $my_groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt = $pdo->prepare("
     SELECT g.id, g.name, g.description
-    FROM groups g
+    FROM `groups` g
     WHERE g.id NOT IN (
         SELECT group_id FROM group_members WHERE user_id = ?
     )

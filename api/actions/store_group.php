@@ -14,17 +14,14 @@ $name        = trim($_POST['name'] ?? '');
 $description = trim($_POST['description'] ?? '');
 $errors      = [];
 
-/* Validate group name */
 if ($name === '') {
     $errors[] = "Gruppnamn är obligatoriskt.";
 }
 
-/* Validate description */
 if ($description === '') {
     $errors[] = "Beskrivning är obligatorisk.";
 }
 
-/* Show validation errors */
 if (!empty($errors)) {
     foreach ($errors as $error) {
         echo "<p>$error</p>";
@@ -35,9 +32,8 @@ if (!empty($errors)) {
 
 try {
 
-    /* Insert new group */
     $stmt = $pdo->prepare("
-        INSERT INTO groups (name, description, created_by)
+        INSERT INTO `groups` (name, description, created_by)
         VALUES (:name, :description, :created_by)
     ");
     $stmt->execute([

@@ -19,7 +19,7 @@ if (!$post_id || !$discussion_id) {
     exit;
 }
 
-/* Fetch post */
+
 $stmt = $pdo->prepare("
     SELECT p.id, p.user_id, d.group_id
     FROM posts p
@@ -34,7 +34,6 @@ if (!$post) {
     exit;
 }
 
-/* Check if user is admin in the group */
 $stmt = $pdo->prepare("
     SELECT role
     FROM group_members
@@ -51,10 +50,8 @@ if (!$is_admin && $post['user_id'] != $user_id) {
     exit;
 }
 
-/* Delete post */
 $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
 $stmt->execute([$post_id]);
 
-/* Redirect back to discussion */
 header("Location: ../public/discussion.php?id=" . $discussion_id);
 exit;

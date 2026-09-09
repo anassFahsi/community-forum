@@ -17,7 +17,7 @@ if (!$group_id) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT id, name FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id, name FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 

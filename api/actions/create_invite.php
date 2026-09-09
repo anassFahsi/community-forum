@@ -17,7 +17,6 @@ if (!$group_id) {
     exit;
 }
 
-/* Check if the user is an admin in the group */
 $stmt = $pdo->prepare("
     SELECT role 
     FROM group_members 
@@ -36,7 +35,6 @@ $token = bin2hex(random_bytes(32));
 
 $expires_at = date("Y-m-d H:i:s", time() + 86400);
 
-/* Store invitation link */
 $stmt = $pdo->prepare("
     INSERT INTO invitation_links (group_id, token, expires_at)
     VALUES (?, ?, ?)

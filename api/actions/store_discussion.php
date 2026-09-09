@@ -31,8 +31,7 @@ if (!empty($errors)) {
     exit;
 }
 
-/* Check if the group exists */
-$stmt = $pdo->prepare("SELECT id FROM groups WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id FROM `groups` WHERE id = ?");
 $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -41,7 +40,6 @@ if (!$group) {
     exit;
 }
 
-/* Check if user is a member of the group */
 $stmt = $pdo->prepare("
     SELECT id 
     FROM group_members 
@@ -55,14 +53,12 @@ if (!$membership) {
     exit;
 }
 
-/* Insert new discussion */
 $stmt = $pdo->prepare("
     INSERT INTO discussions (group_id, subject, created_by)
     VALUES (?, ?, ?)
 ");
 $stmt->execute([$group_id, $subject, $user_id]);
 
-/* Get ID of the newly created discussion */
 $discussion_id = $pdo->lastInsertId();
 
 header("Location: ../public/discussion.php?id=" . $discussion_id);

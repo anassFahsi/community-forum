@@ -1,4 +1,52 @@
-<?php
+<?php 
+
+if(isset($_GET['route'])){
+    $route=$_GET['route'];
+    if($_SERVER['REQUEST_METHOD']==='POST'){
+        if(empty($_POST) && !empty(file_get_contents('php://input'))){
+            $_POST=json_decode(file_get_contents('php://input'),true) ?? [];
+        }
+    }
+
+    if(strpos($route, 'public/')===0){
+        $route=substr($route,7);
+    }
+
+    $route=preg_replace('/\.php$/','',$route);
+    if($route===''||$route==='index'){
+        unset($_GET['route']);
+    }else{
+        if(strpos($route, 'actions/')===0){
+            $actionFile=dirname(__DIR__) .'/' .$route . '.php';
+            if(file_exists($actionFile)){
+                include $actionFile;
+                exit;
+            }
+        }
+
+        $publicFile= __DIR__ .'/' .$route .'.php';
+        if(file_exists($publicFile)){
+            include $publicFile;
+            exit;
+        }
+        http_response_code(404);
+        echo "<h3>Sidan hittades inte (404)</h3>";
+        echo "<b>Letade efter filen på följande platser:</b><br>";
+        echo "- ".htmlspecialchars(dirname(__DIR__) . '/'. $route .'php')."<br>";
+        echo "- ".htmlspecialchars(__DIR__.'/' .$route.'.php')."<br>";
+        exit;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 session_start();
 ?>
 
