@@ -71,3 +71,4 @@ CREATE TABLE invitation_links (
     used BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 );
+
