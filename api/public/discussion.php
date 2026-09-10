@@ -81,9 +81,9 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php else: ?>
         <ul class="space-y-4 mb-10">
             <?php foreach ($posts as $p): ?>
-                <li class="bg-white p-5 rounded shadow">
+                <li class="bg-white p-4 rounded shadow">
 
-                    <p class="text-gray-800 whitespace-pre-line break-words overflow-wrap-anywhere">
+                    <p class="mt-0 text-gray-800 whitespace-pre-line break-words overflow-wrap-anywhere">
 
                         <?php echo nl2br(htmlspecialchars($p['content'])); ?>
                     </p>

@@ -76,6 +76,12 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$request_id]);
 
+$stmt=$pdo->prepare("INSERT INTO notifications (user_id,message) VALUES (:user_id, :message)");
+$stmt->execute([
+    ':user_id' => $requested_user_id, 
+    ':message' => "Din ansökan till gruppen ".$group['name']. " har blivit godkänd!"
+]);
+
 header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
 

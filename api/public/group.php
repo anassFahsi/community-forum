@@ -87,7 +87,7 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if ($group['created_by'] == $user_id): ?>
             <button 
                 onclick="openGroupDeleteModal()" 
-                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                class="bg-red-600 text-white mt-4 px-4 py-2 rounded hover:bg-red-700 transition">
                 Ta bort grupp
             </button>
         <?php endif; ?>
