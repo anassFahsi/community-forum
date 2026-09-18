@@ -14,7 +14,9 @@ $group_id = $_GET['group_id'] ?? null;
 $discussion_id = $_GET['id'] ?? null;
 
 if (!$discussion_id || !$group_id) {
-    echo "Felaktig förfrågan";
+    $message = "Felaktig förfrågan.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -23,7 +25,9 @@ $stmt->execute([$group_id, $discussion_id]);
 $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$existing) {
-    echo "Diskussionen finns inte";
+    $message = "Diskussionen finns inte.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -33,9 +37,10 @@ $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $is_admin = $membership && $membership['role'] === 'admin';
 
-
 if (!$is_admin && $existing['created_by'] !== $user_id) {
-    echo "Du har inte behörighet att ta bort diskussionen";
+    $message = "Du har inte behörighet att ta bort diskussionen.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -45,7 +50,12 @@ try {
 
     header("location: ../public/group.php?id=$group_id");
     exit;
+
 } catch (PDOException $e) {
-    echo "Kunde inte ta bort diskussionen";
+    $message = "Kunde inte ta bort diskussionen.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
+    exit;
 }
+
 

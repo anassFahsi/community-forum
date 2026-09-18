@@ -13,7 +13,9 @@ $user_id  = $_SESSION['user_id'];
 $group_id = $_GET['id'] ?? null;
 
 if (!$group_id) {
-    echo "<p>Ingen grupp angiven.</p>";
+    $message = "Ingen grupp angiven.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -22,7 +24,9 @@ $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$group) {
-    echo "<p>Gruppen finns inte.</p>";
+    $message = "Gruppen finns inte.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -35,11 +39,12 @@ $stmt->execute([$user_id, $group_id]);
 $existing_member = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existing_member) {
-    header("Location: ../public/group.php?id=" . $group_id);
+    $message = "Du är redan medlem i denna grupp.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
-/* Check if the user already has a join request */
 $stmt = $pdo->prepare("
     SELECT id, status
     FROM group_join_requests
@@ -49,20 +54,23 @@ $stmt->execute([$user_id, $group_id]);
 $existing_request = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existing_request) {
-    echo "<p>Du har redan en ansökan med status: " . htmlspecialchars($existing_request['status']) . "</p>";
-    echo '<a href="../public/groups.php">Tillbaka</a>';
+    $message = "Du har redan en ansökan med status: " . htmlspecialchars($existing_request['status']);
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
-/* Create a new join request */
 $stmt = $pdo->prepare("
     INSERT INTO group_join_requests (user_id, group_id, status)
     VALUES (?, ?, 'pending')
 ");
 $stmt->execute([$user_id, $group_id]);
 
-echo "<p>Din ansökan har skickats!</p>";
-echo '<a href="../public/groups.php">Tillbaka</a>';
+$message = "Din ansökan har skickats!";
+$backLink = "../public/groups.php";
+require __DIR__ . "/../includes/message.php";
 exit;
+
+
 
 

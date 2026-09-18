@@ -9,10 +9,9 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/../includes/db.php';
 $pdo = getPDO();
 
-$user_id = $_SESSION['user_id'];
-
+$user_id       = $_SESSION['user_id'];
 $discussion_id = $_POST['discussion_id'] ?? null;
-$content = trim($_POST['content'] ?? '');
+$content       = trim($_POST['content'] ?? '');
 
 $errors = [];
 
@@ -25,13 +24,11 @@ if ($content === '') {
 }
 
 if (!empty($errors)) {
-    foreach ($errors as $e) {
-        echo "<p>$e</p>";
-    }
-    echo '<a href="../public/discussion.php?id=' . htmlspecialchars($discussion_id) . '">Tillbaka</a>';
+    $message = implode("<br>", $errors);
+    $backLink = "../public/discussion.php?id=" . htmlspecialchars($discussion_id);
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
-
 
 $stmt = $pdo->prepare("
     SELECT id, group_id 
@@ -42,7 +39,9 @@ $stmt->execute([$discussion_id]);
 $discussion = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$discussion) {
-    echo "<p>Diskussionen finns inte.</p>";
+    $message = "Diskussionen finns inte.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -58,7 +57,9 @@ $stmt->execute([$user_id, $group_id]);
 $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$membership) {
-    echo "<p>Du måste vara medlem i gruppen för att skriva ett inlägg.</p>";
+    $message = "Du måste vara medlem i gruppen för att skriva ett inlägg.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -70,3 +71,4 @@ $stmt->execute([$discussion_id, $user_id, $content]);
 
 header("Location: ../public/discussion.php?id=" . $discussion_id);
 exit;
+

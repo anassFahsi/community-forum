@@ -13,7 +13,9 @@ $user_id  = $_SESSION['user_id'];
 $group_id = $_GET['group_id'] ?? null;
 
 if (!$group_id) {
-    echo "<p>Ingen grupp angiven.</p>";
+    $message = "Ingen grupp angiven.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -26,7 +28,9 @@ $stmt->execute([$user_id, $group_id]);
 $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$membership || $membership['role'] !== 'admin') {
-    echo "<p>Endast administratörer kan skapa en inbjudningslänk.</p>";
+    $message = "Endast administratörer kan skapa en inbjudningslänk.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -41,10 +45,17 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$group_id, $token, $expires_at]);
 
-/* Build invitation URL */
-$invite_url = "http://localhost/community-forum/public/use_invite.php?token=" . $token;
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
 
-echo "<p>Inbjudningslänk är skapad!</p>";
-echo "<p><a href='$invite_url'>$invite_url</a></p>";
-echo "<a href='../public/manage_members.php?group_id=$group_id'>Tillbaka</a>";
+$invite_url = $protocol . $host . "/actions/use_invite.php?token=" . $token;
+
+$message = "Inbjudningslänk är skapad!";
+$extraHtml = "<a href='$invite_url' class='text-blue-600 underline break-all'>$invite_url</a>";
+$backLink = "../public/manage_members.php?group_id=$group_id";
+
+require __DIR__ . "/../includes/message.php";
+exit;
+
+
 

@@ -14,7 +14,9 @@ $member_id = $_GET['id'] ?? null;
 $group_id  = $_GET['group_id'] ?? null;
 
 if (!$member_id || !$group_id) {
-    echo "<p>Felaktig förfrågan.</p>";
+    $message = "Felaktig förfrågan.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -23,7 +25,9 @@ $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$group) {
-    echo "<p>Gruppen finns inte.</p>";
+    $message = "Gruppen finns inte.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -37,7 +41,9 @@ $stmt->execute([$user_id, $group_id]);
 $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$membership || $membership['role'] !== 'admin') {
-    echo "<p>Endast administratörer kan ändra roller.</p>";
+    $message = "Endast administratörer kan ändra roller.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -50,13 +56,17 @@ $stmt->execute([$member_id, $group_id]);
 $member = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$member) {
-    echo "<p>Medlemmen finns inte.</p>";
+    $message = "Medlemmen finns inte.";
+    $backLink = "../public/manage_members.php?group_id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
 /* Admin cannot modify their own role */
 if ($member['user_id'] == $user_id) {
-    echo "<p>Du kan inte ändra din egen roll.</p>";
+    $message = "Du kan inte ändra din egen roll.";
+    $backLink = "../public/manage_members.php?group_id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -69,6 +79,7 @@ $stmt->execute([$member_id]);
 
 header("Location: ../public/manage_members.php?group_id=" . $group_id);
 exit;
+
 
 
 

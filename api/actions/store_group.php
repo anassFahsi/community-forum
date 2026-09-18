@@ -23,10 +23,9 @@ if ($description === '') {
 }
 
 if (!empty($errors)) {
-    foreach ($errors as $error) {
-        echo "<p>$error</p>";
-    }
-    echo '<a href="../public/create_group.php">Tillbaka</a>';
+    $message = implode("<br>", $errors);
+    $backLink = "../public/create_group.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -60,9 +59,12 @@ try {
 
 } catch (PDOException $e) {
 
-    echo "<p>Kunde inte skapa grupp. Försök senare.</p>";
-    echo '<a href="../public/create_group.php">Tillbaka</a>';
+    $message = "Kunde inte skapa grupp. Försök senare.";
+    $backLink = "../public/create_group.php";
+    require __DIR__ . "/../includes/message.php";
+    exit;
 }
+
 
 
 

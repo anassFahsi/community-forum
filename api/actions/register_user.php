@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
 
+session_start();
+
 $pdo = getPDO();
 
 $first_name = trim($_POST['first_name'] ?? '');
@@ -27,10 +29,9 @@ if (strlen($password) < 6) {
 }
 
 if (!empty($errors)) {
-    foreach ($errors as $error) {
-        echo "<p>$error</p>";
-        echo "<a href=../public/register.php> Prova igen </a>";
-    }
+    $message = implode("<br>", $errors);
+    $backLink = "../public/register.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -53,5 +54,9 @@ try {
     exit;
 
 } catch (PDOException $e) {
-    echo "Kunde inte skapa användare. Kanske finns e-posten redan?";
+    $message = "Kunde inte skapa användare. Kanske finns e‑posten redan?";
+    $backLink = "../public/register.php";
+    require __DIR__ . "/../includes/message.php";
+    exit;
 }
+

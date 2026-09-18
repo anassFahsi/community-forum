@@ -7,7 +7,9 @@ $pdo = getPDO();
 $token = $_GET['token'] ?? null;
 
 if (!$token) {
-    echo "<p>Ingen token angiven.</p>";
+    $message = "Ingen token angiven.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -21,31 +23,40 @@ $stmt->execute([$token]);
 $invite = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$invite) {
-    echo "<p>Ogiltig inbjudningslänk.</p>";
+    $message = "Ogiltig inbjudningslänk.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
 /* Already used? */
 if ($invite['used']) {
-    echo "<p>Denna inbjudningslänk har redan använts.</p>";
+    $message = "Denna inbjudningslänk har redan använts.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
 /* Expired? */
 if (strtotime($invite['expires_at']) < time()) {
-    echo "<p>Inbjudningslänken har gått ut.</p>";
+    $message = "Inbjudningslänken har gått ut.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
+/* Must be logged in */
 if (!isset($_SESSION['user_id'])) {
-    echo "<p>Du måste logga in för att använda inbjudningslänken.</p>";
-    echo "<a href='../public/login.php'>Logga in</a>";
+    $message = "Du måste logga in för att använda inbjudningslänken.";
+    $backLink = "../public/login.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id  = $_SESSION['user_id'];
 $group_id = $invite['group_id'];
 
+/* Already member? */
 $stmt = $pdo->prepare("
     SELECT id FROM group_members
     WHERE user_id = ? AND group_id = ?
@@ -54,11 +65,13 @@ $stmt->execute([$user_id, $group_id]);
 $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existing) {
-    echo "<p>Du är redan medlem i gruppen.</p>";
+    $message = "Du är redan medlem i gruppen.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
-/* Add member directly */
+/* Add member */
 $stmt = $pdo->prepare("
     INSERT INTO group_members (user_id, group_id, role)
     VALUES (?, ?, 'member')

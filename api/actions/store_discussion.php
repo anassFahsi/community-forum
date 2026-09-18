@@ -24,10 +24,9 @@ if ($subject === '') {
 }
 
 if (!empty($errors)) {
-    foreach ($errors as $e) {
-        echo "<p>$e</p>";
-    }
-    echo '<a href="../public/create_discussion.php?group_id=' . htmlspecialchars($group_id) . '">Tillbaka</a>';
+    $message = implode("<br>", $errors);
+    $backLink = "../public/create_discussion.php?group_id=" . htmlspecialchars($group_id);
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -36,7 +35,9 @@ $stmt->execute([$group_id]);
 $group = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$group) {
-    echo "<p>Gruppen finns inte.</p>";
+    $message = "Gruppen finns inte.";
+    $backLink = "../public/groups.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -49,7 +50,9 @@ $stmt->execute([$user_id, $group_id]);
 $membership = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$membership) {
-    echo "<p>Du måste vara medlem i gruppen för att skapa en diskussion.</p>";
+    $message = "Du måste vara medlem i gruppen för att skapa en diskussion.";
+    $backLink = "../public/group.php?id=" . $group_id;
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -63,4 +66,5 @@ $discussion_id = $pdo->lastInsertId();
 
 header("Location: ../public/discussion.php?id=" . $discussion_id);
 exit;
+
 

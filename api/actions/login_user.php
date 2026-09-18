@@ -18,9 +18,9 @@ if ($password === '') {
 }
 
 if (!empty($errors)) {
-    foreach ($errors as $error) {
-        echo "<p>$error</p>";
-    }
+    $message = implode("<br>", $errors);
+    $backLink = "../public/login.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -29,12 +29,16 @@ $stmt->execute([':email' => $email]);
 $user = $stmt->fetch($pdo::FETCH_ASSOC);
 
 if (!$user) {
-    echo "<p>Fel e-post eller lösenord.</p>";
+    $message = "Fel e-post eller lösenord.";
+    $backLink = "../public/login.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
 if (!password_verify($password, $user['password_hash'])) {
-    echo "<p>Fel e-post eller lösenord.</p>";
+    $message = "Fel e-post eller lösenord.";
+    $backLink = "../public/login.php";
+    require __DIR__ . "/../includes/message.php";
     exit;
 }
 
@@ -43,3 +47,4 @@ $_SESSION['first_name'] = $user['first_name'];
 
 header('Location: ../public/dashboard.php');
 exit;
+
