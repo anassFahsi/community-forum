@@ -13,5 +13,10 @@
     "src": "/(.*)\\.php", "dest": "api/public/index.php?route=$1" },
     {
         "src":"/(.*)", "dest": "/api/public/$1"    }
-    ]
+    ], "crons": [
+    {
+      "path": "/api/ping",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }
